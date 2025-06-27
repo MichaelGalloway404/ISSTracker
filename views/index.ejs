@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="/styles/main.css" />
+  <title>ISS Tracker!</title>
+</head>
+<body>
+  <canvas id="drawingCanvas" width="600" height="300"></canvas>
+  <div class="container">
+    <h1>Let's find where The International Space Station is 🛰️</h1>
+
+    <form action="/" id="form" class="form" method="POST">
+      <button type="submit" class="form-submit">Click for Current Location</button>
+    </form>
+    
+    <script>
+      // refresh the page every 10 seconds
+      setTimeout(() => {
+        window.location.reload();
+      }, 10000); // 10,000ms = 10 seconds
+    </script>
+
+    
+    <!-- Conditional rendering block: only runs if backend passed location data -->
+    <% if (locals.urlToGo && locals.latitude && locals.longitude && locals.plotedPath) { %>
+      
+      <!-- Link to open the current ISS position on Google Maps in a new tab -->
+      <a href="#" onclick="openInNewTab('<%= urlToGo %>')">
+        Click Me: ISS location on Google Maps, time = 
+        <%= new Date().getHours() %>:<%= new Date().getMinutes() %>:<%= new Date().getSeconds() %>
+      </a>
+
+      <!-- Function to open URL in new browser tab -->
+      <script>
+        function openInNewTab(url) {
+          window.open(url, '_blank'); // '_blank' opens in a new tab
+        }
+      </script>
+
+      <!-- Create a JavaScript object named issData with current location and path to be used by drawMap.js -->
+      <!-- drawMap.js will use this info from server to plat and draw the ISS onto a canves element -->
+      <script>
+        const issData = {
+          currentLat: <%= latitude %>,            // Latitude passed from backend
+          currentLon: <%= longitude %>,           // Longitude passed from backend
+          path: <%- JSON.stringify(plotedPath) %> // Array of previous coordinates
+        };
+      </script>
+    <% } %>
+  </div>
+
+  <!-- Draws the ISS location on the canvas -->
+  <script src="/drawMap.js"></script>
+</body>
+</html>
