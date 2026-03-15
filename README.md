@@ -17,3 +17,9 @@ http://localhost:3000
 If you're making changes and want the server to auto-restart on file changes, install and use nodemon:
 >>npm install --save-dev nodemon
 npx nodemon index.js
+
+---
+
+## Author
+
+Michael Galloway
